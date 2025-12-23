@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X-Ray AI Tahlil - Intelligent Medical Diagnostics Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0A4D68;
+            --primary-light: #088395;
+            --accent: #05BFDB;
+            --bg-dark: #0B1215;
+            --bg-card: #151F26;
+            --text-primary: #E8F1F5;
+            --text-secondary: #8FA3AD;
+            --success: #00D9A3;
+            --warning: #FFB800;
+            --danger: #FF3B5C;
+            --gradient-1: linear-gradient(135deg, #0A4D68 0%, #088395 100%);
+            --gradient-2: linear-gradient(135deg, #05BFDB 0%, #088395 100%);
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header & Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(11, 18, 21, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(5, 191, 219, 0.1);
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .lang-switcher {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .lang-btn {
+            padding: 0.4rem 0.8rem;
+            background: transparent;
+            border: 1px solid var(--primary-light);
+            color: var(--text-secondary);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .lang-btn:hover, .lang-btn.active {
+            background: var(--primary-light);
+            color: var(--text-primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 2rem 4rem;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(5, 191, 219, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(8, 131, 149, 0.15) 0%, transparent 50%);
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -2px;
+        }
+
+        .hero-text .gradient-text {
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--gradient-1);
+            color: var(--text-primary);
+            box-shadow: 0 4px 20px rgba(5, 191, 219, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(5, 191, 219, 0.5);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--primary-light);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-light);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(5, 191, 219, 0.1);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 8px 30px rgba(5, 191, 219, 0.2);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Upload Section */
+        .upload-section {
+            max-width: 1400px;
+            margin: 6rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+        }
+
+        .upload-container {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 3rem;
+            border: 2px dashed var(--primary-light);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-container:hover {
+            border-color: var(--accent);
+            background: rgba(5, 191, 219, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-hint {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        /* Analysis Process */
+        .process-section {
+            max-width: 1400px;
+            margin: 6rem auto;
+            padding: 0 2rem;
+        }
+
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .process-card {
+            background: var(--bg-card);
+            padding: 2.5rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+            transition: all 0.3s;
+        }
+
+        .process-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 8px 30px rgba(5, 191, 219, 0.2);
+        }
+
+        .process-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent);
+            font-family: 'IBM Plex Mono', monospace;
+            opacity: 0.3;
+            line-height: 1;
+        }
+
+        .process-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 1rem 0;
+        }
+
+        .process-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* Results Section */
+        .results-section {
+            max-width: 1400px;
+            margin: 6rem auto;
+            padding: 0 2rem;
+            display: none;
+        }
+
+        .results-section.active {
+            display: block;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .results-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(5, 191, 219, 0.1);
+        }
+
+        .results-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .diagnosis-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .diagnosis-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .probability-bar {
+            height: 8px;
+            background: rgba(5, 191, 219, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .probability-fill {
+            height: 100%;
+            background: var(--gradient-2);
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+
+        .heatmap-container {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .heatmap-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Features Section */
+        .features-section {
+            max-width: 1400px;
+            margin: 6rem auto;
+            padding: 0 2rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .feature-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-10px);
+            box-shadow: 0 12px 40px rgba(5, 191, 219, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Future Strategy */
+        .strategy-section {
+            max-width: 1400px;
+            margin: 6rem auto;
+            padding: 4rem 2rem;
+            background: var(--gradient-1);
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .strategy-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .strategy-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .strategy-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .strategy-item h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            max-width: 1400px;
+            margin: 4rem auto;
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(5, 191, 219, 0.1);
+        }
+
+        .disclaimer {
+            background: rgba(255, 59, 92, 0.1);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--danger);
+        }
+
+        .disclaimer h4 {
+            color: var(--danger);
+            margin-bottom: 0.5rem;
+        }
+
+        .disclaimer p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(5, 191, 219, 0.1);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .strategy-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .process-grid,
+            .features-grid,
+            .strategy-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .delay-3 { animation-delay: 0.3s; opacity: 0; }
+        .delay-4 { animation-delay: 0.4s; opacity: 0; }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">⚕️ X-Ray AI</div>
+            <ul class="nav-links">
+                <li><a href="#home">Bosh sahifa</a></li>
+                <li><a href="#upload">Tahlil</a></li>
+                <li><a href="#features">Imkoniyatlar</a></li>
+                <li><a href="#future">Kelajak</a></li>
+            </ul>
+            <div class="lang-switcher">
+                <button class="lang-btn active" data-lang="uz">O'z</button>
+                <button class="lang-btn" data-lang="ru">Ру</button>
+                <button class="lang-btn" data-lang="en">En</button>
+            </div>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="fade-in">
+                    Intelligent <span class="gradient-text">X-Ray</span><br>
+                    Diagnostics Platform
+                </h1>
+                <p class="fade-in delay-1">
+                    Sun'iy intellekt asosida rentgen tasvirlarini tahlil qilish va 
+                    COVID-19, Viral Pneumonia, Lung Opacity kabi kasalliklarni 
+                    yuqori aniqlikda aniqlash platformasi.
+                </p>
+                <div class="cta-buttons fade-in delay-2">
+                    <a href="#upload" class="btn btn-primary">Tahlilni boshlash</a>
+                    <a href="#features" class="btn btn-secondary">Batafsil ma'lumot</a>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card fade-in delay-3">
+                        <div class="stat-number">50K+</div>
+                        <div class="stat-label">O'qitilgan rentgen tasvirlari</div>
+                    </div>
+                    <div class="stat-card fade-in delay-4">
+                        <div class="stat-number">90%+</div>
+                        <div class="stat-label">Aniqlik darajasi (Accuracy)</div>
+                    </div>
+                    <div class="stat-card fade-in delay-4">
+                        <div class="stat-number">~5s</div>
+                        <div class="stat-label">O'rtacha tahlil tezligi</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="upload" class="upload-section">
+        <h2 class="section-title">Rentgen Tahlili</h2>
+        <p class="section-subtitle">Ko'krak qafasi rentgen tasvirini yuklang va AI tahlilini oling</p>
+        
+        <div class="upload-container" onclick="document.getElementById('fileInput').click()">
+            <div class="upload-icon">📤</div>
+            <div class="upload-text">Rasmni yuklash uchun bosing yoki bu yerga torting</div>
+            <div class="upload-hint">Qo'llab-quvvatlanadigan formatlar: JPG, PNG (maks. 10MB)</div>
+            <input type="file" id="fileInput" accept="image/*">
+        </div>
+
+        <div class="loading" id="loadingSection">
+            <div class="spinner"></div>
+            <p>Tasvir tahlil qilinmoqda, iltimos kuting...</p>
+        </div>
+    </section>
+
+    <section class="process-section">
+        <h2 class="section-title">Ikki Bosqichli Intellektual Tahlil</h2>
+        <p class="section-subtitle">YOLOv8 va ResNet modellaridan foydalanib yuqori aniqlik bilan tahlil</p>
+
+        <div class="process-grid">
+            <div class="process-card">
+                <div class="process-number">01</div>
+                <h3 class="process-title">Validatsiya (YOLOv8)</h3>
+                <p class="process-description">
+                    Yuklangan rasm haqiqatan ham ko'krak qafasi rentgenimi yoki yo'qligini 
+                    tekshiradi. Noto'g'ri rasmlar avtomatik rad etiladi va xatoliklar 
+                    oldini oladi.
+                </p>
+            </div>
+
+            <div class="process-card">
+                <div class="process-number">02</div>
+                <h3 class="process-title">Diagnostika (ResNet)</h3>
+                <p class="process-description">
+                    4-sinf tahlili (COVID-19, Viral Pneumonia, Lung Opacity, Normal) va 
+                    binar tahlil (COVID bor/yo'q) orqali kasalliklarni yuqori aniqlikda 
+                    aniqlaydi.
+                </p>
+            </div>
+
+            <div class="process-card">
+                <div class="process-number">03</div>
+                <h3 class="process-title">Grad-CAM Vizualizatsiya</h3>
+                <p class="process-description">
+                    AI qaysi hududlarni "shubhali" deb topganini issiqlik xaritasi 
+                    (heatmap) ko'rinishida ko'rsatadi, bu shifokorlarga AI qarorini 
+                    tushunishga yordam beradi.
+                </p>
+            </div>
+
+            <div class="process-card">
+                <div class="process-number">04</div>
+                <h3 class="process-title">PDF Hisobot</h3>
+                <p class="process-description">
+                    Tahlil natijalari professional PDF formatda avtomatik generatsiya 
+                    qilinadi. Shifokor izohi va imzosi uchun maxsus joylar kiritilgan.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="results" class="results-section">
+        <h2 class="section-title">Tahlil Natijalari</h2>
+        <p class="section-subtitle">AI tarafidan aniqlangan diagnostik ma'lumotlar</p>
+
+        <div class="results-grid">
+            <div class="results-card">
+                <h3>📊 Diagnostik Ehtimolliklar</h3>
+                
+                <div class="diagnosis-item">
+                    <div class="diagnosis-label">
+                        <span>COVID-19</span>
+                        <span class="diagnosis-value">0.00%</span>
+                    </div>
+                    <div class="probability-bar">
+                        <div class="probability-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="diagnosis-item">
+                    <div class="diagnosis-label">
+                        <span>Viral Pneumonia</span>
+                        <span class="diagnosis-value">0.00%</span>
+                    </div>
+                    <div class="probability-bar">
+                        <div class="probability-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="diagnosis-item">
+                    <div class="diagnosis-label">
+                        <span>Lung Opacity</span>
+                        <span class="diagnosis-value">0.00%</span>
+                    </div>
+                    <div class="probability-bar">
+                        <div class="probability-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="diagnosis-item">
+                    <div class="diagnosis-label">
+                        <span>Normal</span>
+                        <span class="diagnosis-value">0.00%</span>
+                    </div>
+                    <div class="probability-bar">
+                        <div class="probability-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;" onclick="generatePDF()">
+                    📄 PDF Hisobotni yuklab olish
+                </button>
+            </div>
+
+            <div class="results-card">
+                <h3>🔥 Grad-CAM Heatmap</h3>
+                <div class="heatmap-container">
+                    <img src="https://via.placeholder.com/500x600/1a1a2e/05BFDB?text=Heatmap+Visualization" alt="Heatmap">
+                </div>
+                <p style="color: var(--text-secondary); margin-top: 1rem; font-size: 0.9rem;">
+                    Qizil va sariq ranglar AI tomonidan aniqlangan shubhali hududlarni ko'rsatadi
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features-section">
+        <h2 class="section-title">Platformaning Asosiy Imkoniyatlari</h2>
+        <p class="section-subtitle">Professional tibbiy amaliyot uchun zamonaviy yechimlar</p>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3 class="feature-title">Yuqori Aniqlik</h3>
+                <p class="feature-description">
+                    90% dan yuqori aniqlik darajasi bilan COVID-19 va boshqa 
+                    o'pka kasalliklarini aniqlash
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">Tezkor Tahlil</h3>
+                <p class="feature-description">
+                    O'rtacha 5 soniyada to'liq diagnostik tahlil va 
+                    natijalarni vizualizatsiya qilish
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔬</div>
+                <h3 class="feature-title">Ikki Bosqichli Validatsiya</h3>
+                <p class="feature-description">
+                    YOLOv8 va ResNet modellaridan foydalanib xatoliklarni 
+                    minimallashtirishning kafolati
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3 class="feature-title">Grad-CAM Vizualizatsiya</h3>
+                <p class="feature-description">
+                    AI qarorlarining shaffof tushuntirilishi va shifokorlar 
+                    uchun vizual ko'rsatkichlar
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📄</div>
+                <h3 class="feature-title">PDF Hisob</h3>
+                <p class="feature-description">
+                    Professional tibbiy hisobotni avtomatik generatsiya qilish 
+                    va arxivlash imkoniyati
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🌐</div>
+                <h3 class="feature-title">Ko'p Tillilik</h3>
+                <p class="feature-description">
+                    O'zbek, Rus va Ingliz tillarida to'liq lokalizatsiya va 
+                    xalqaro miqyosga tayyorlik
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="future" class="strategy-section">
+        <div class="strategy-content">
+            <h2>🚀 Kelajak Strategiyasi: DICOM & Telemedicine</h2>
+            <p style="color: rgba(255,255,255,0.8); max-width: 800px; margin: 0 auto;">
+                Platformani davlat miqyosida tibbiy ekotizimga integratsiya qilish va 
+                global standartlarga moslashtirishning rivojlanish yo'li
+            </p>
+
+            <div class="strategy-grid">
+                <div class="strategy-item">
+                    <h4>🏥 DICOM Integratsiya</h4>
+                    <p>Rentgen apparatlaridan to'g'ridan-to'g'ri rasmlarni qabul qilish</p>
+                </div>
+
+                <div class="strategy-item">
+                    <h4>🔬 Patologiyalar Qamrovi</h4>
+                    <p>15+ xil kasalliklarni aniqlash: Sil, Saraton, Plevral Effuziya</p>
+                </div>
+
+                <div class="strategy-item">
+                    <h4>☁️ Bulutli Ekotizim</h4>
+                    <p>Shifoxonalar aro masofaviy diagnostika va konsultatsiya platformasi</p>
+                </div>
+
+                <div class="strategy-item">
+                    <h4>📱 Mobil Ilova</h4>
+                    <p>Shifokorlar uchun Android/iOS ilovalar orqali har yerdan kirish</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="disclaimer">
+            <h4>⚠️ Tibbiy Mas'uliyat va Ogohlantirish</h4>
+            <p>
+                Bu platforma shifokorlar uchun yordamchi diagnostik vosita hisoblanadi va 
+                yakuniy tibbiy tashxisni qo'yish yoki davolash rejasini belgilash uchun 
+                ishlatilmasligi kerak. Barcha qarorlar malakali shifokor tomonidan qabul 
+                qilinishi shart.
+            </p>
+        </div>
+
+        <p style="color: var(--text-secondary);">
+            © 2024 X-Ray AI Tahlil Platform. Barcha huquqlar himoyalangan.<br>
+            Developed with ❤️ using AI & Deep Learning
+        </p>
+    </footer>
+
+    <script>
+        // File Upload Handler
+        const fileInput = document.getElementById('fileInput');
+        const loadingSection = document.getElementById('loadingSection');
+        const resultsSection = document.getElementById('results');
+
+        fileInput.addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                simulateAnalysis();
+            }
+        });
+
+        function simulateAnalysis() {
+            // Show loading
+            loadingSection.classList.add('active');
+            resultsSection.classList.remove('active');
+
+            // Simulate AI analysis (3 seconds)
+            setTimeout(() => {
+                loadingSection.classList.remove('active');
+                resultsSection.classList.add('active');
+                
+                // Animate probabilities
+                animateProbabilities();
+                
+                // Scroll to results
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            }, 3000);
+        }
+
+        function animateProbabilities() {
+            // Example probabilities (in real app, these come from AI)
+            const probabilities = {
+                'COVID-19': 15.3,
+                'Viral Pneumonia': 72.8,
+                'Lung Opacity': 8.5,
+                'Normal': 3.4
+            };
+
+            const diagnosisItems = document.querySelectorAll('.diagnosis-item');
+            
+            diagnosisItems.forEach((item, index) => {
+                const label = item.querySelector('.diagnosis-label span:first-child').textContent;
+                const valueSpan = item.querySelector('.diagnosis-value');
+                const fillBar = item.querySelector('.probability-fill');
+                
+                const probability = probabilities[label] || 0;
+                
+                setTimeout(() => {
+                    valueSpan.textContent = probability.toFixed(2) + '%';
+                    fillBar.style.width = probability + '%';
+                }, index * 200);
+            });
+        }
+
+        function generatePDF() {
+            alert('PDF hisobot generatsiya qilinmoqda...\n\nReal implementatsiyada bu yerda jsPDF yoki server-side PDF generator ishlatiladi.');
+        }
+
+        // Language Switcher
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const lang = this.dataset.lang;
+                alert(`Til o'zgartirildi: ${lang}\n\nReal implementatsiyada bu yerda barcha matnlar almashtiriladi.`);
+            });
+        });
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards
+        document.querySelectorAll('.stat-card, .process-card, .feature-card, .strategy-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease-out';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
